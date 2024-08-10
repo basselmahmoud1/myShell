@@ -61,6 +61,10 @@ void perform_builtin(int argc,char** argv,operant op , int loc)
 		{
 			envir();
 		}
+		else if (strcmp(argv[0],"allvar")==0)
+		{
+			print_all_var();
+		}
 		
 		else if(strcmp(argv[0],"myfree")==0)
 		{
@@ -75,8 +79,9 @@ void perform_builtin(int argc,char** argv,operant op , int loc)
 		else if (strcmp(argv[0],"cd")==0)
 		{
 			char * carry = cd (argc,argv);
-			write_usr( carry , strlen(carry) ) ;
-			write_usr("\n", strlen("\n") );
+			
+			/*write_usr( carry , strlen(carry) ) ;
+			write_usr("\n", strlen("\n") );*/
 		}
 		else
 		{
@@ -94,35 +99,181 @@ void perform_builtin(int argc,char** argv,operant op , int loc)
 }
 
 
-void help (int argc,char **argv)
+void help(int argc, char **argv)
 {
-	if (argc == 1 )
-		write_usr("help command dispaly explaination of each command\n", strlen("help command dispaly explaination of each command\n") );
-	else if (strcmp(argv[1],"mycp")==0)
-		write_usr("cp : copy a file given (1st argumment) into the other file (2nd argumment)\n",strlen("cp : 					copy a file given (1st argumment) into the other file (2nd argumment)\n"));
-	else if (strcmp(argv[1],"echo")==0)
-		write_usr("echo : print back the string given\n",strlen("echo : print back the string given\n"));
-	else if (strcmp(argv[1],"mypwd")==0)
-		write_usr("pwd : prints the current working directory\n",strlen("pwd : prints the current working directory\n"));
-	else if (strcmp(argv[1],"mymv")==0)
-		write_usr("mv : move file to another directory\n",strlen("mv : move file to another directory\n"));
-	else if (strcmp(argv[1],"exit")==0)
-		write_usr("exit : terminates the shell\n",strlen("exit : terminates the shell\n"));
-	else if (strcmp(argv[1],"type")==0)
-		write_usr("type : gives you the type of command\nExternal\nInternal\nunsupported\n",strlen("type : gives you the type of command\nExternal\nInternal\nunsupported\n"));
-	else if (strcmp(argv[1],"help")==0)
-		write_usr("supported builtin commands are:\nhelp\nexit\nmv\npwd\necho\ncp\n",strlen("supported builtin commands are:\nhelp\nexit\nmv\npwd\necho\ncp\n"));
-	else if (strcmp(argv[1],"cd")==0)
-		write_usr("cd : change working directory\n",strlen("cd : change working directory\n"));
-	else if (strcmp(argv[1],"envir")==0)
-		write_usr("envir : print all environment variables\n",strlen("envir : print all environment variables\n"));
-	else if (strcmp(argv[1],"myps")==0)
-		write_usr("myps : print last 10 processes\n",strlen("myps : print last 10 processes\n"));
-	else if (strcmp(argv[1],"myfree")==0)
-		write_usr("myfree : print RAM & SWAP information\n",strlen("myfree : print RAM & SWAP information\n"));
-	else if (strcmp(argv[1],"myuptime")==0)
-		write_usr("uptime : print the uptime for the system and the time spent in the idle process\n",strlen("uptime : print the uptime for the system and the time spent in the idle process\n"));
+    if (argc == 1)
+    {
+        write_usr("help: Displays explanations of each command available in this shell.\n"
+                  "      Usage: help [command]\n"
+                  "      Use 'help <command>' to get detailed information about a specific command.\n"
+                  "      This command is essential for understanding how to use the shell effectively.\n"
+                  "      Supported commands include:\n"
+                  "      cd, echo, exit, help, mycp, mymv, mypwd, type, envir, myps, myfree, myuptime\n",
+                  strlen("help: Displays explanations of each command available in this shell.\n"
+                         "      Usage: help [command]\n"
+                         "      Use 'help <command>' to get detailed information about a specific command.\n"
+                         "      This command is essential for understanding how to use the shell effectively.\n"
+                         "      Supported commands include:\n"
+                         "      cd, echo, exit, help, mycp, mymv, mypwd, type, envir, myps, myfree, myuptime\n"));
+    }
+    else if (strcmp(argv[1], "mycp") == 0)
+    {
+        write_usr("mycp: Copies a file (1st argument) to another file or directory (2nd argument).\n"
+                  "      Usage: mycp <source> <destination>\n"
+                  "      The command supports full paths for both source and destination.\n"
+                  "      If the destination is a directory, the file will be copied into that directory.\n"
+                  "      Related commands: mymv (to move instead of copy), echo (to display content).\n",
+                  strlen("mycp: Copies a file (1st argument) to another file or directory (2nd argument).\n"
+                         "      Usage: mycp <source> <destination>\n"
+                         "      The command supports full paths for both source and destination.\n"
+                         "      If the destination is a directory, the file will be copied into that directory.\n"
+                         "      Related commands: mymv (to move instead of copy), echo (to display content).\n"));
+    }
+    else if (strcmp(argv[1], "echo") == 0)
+    {
+        write_usr("echo: Prints back the string provided as an argument.\n"
+                  "      Usage: echo <string>\n"
+                  "      The command can be used to display messages or the value of variables.\n"
+                  "      Supports environment variable expansion.\n"
+                  "      Related commands: help (to get information about commands), type (to get the type of command).\n",
+                  strlen("echo: Prints back the string provided as an argument.\n"
+                         "      Usage: echo <string>\n"
+                         "      The command can be used to display messages or the value of variables.\n"
+                         "      Supports environment variable expansion.\n"
+                         "      Related commands: help (to get information about commands), type (to get the type of command).\n"));
+    }
+    else if (strcmp(argv[1], "mypwd") == 0)
+    {
+        write_usr("mypwd: Prints the current working directory.\n"
+                  "       Usage: mypwd\n"
+                  "       This command helps to verify the current directory context.\n"
+                  "       Related commands: cd (to change directories), ls (to list directory contents).\n",
+                  strlen("mypwd: Prints the current working directory.\n"
+                         "       Usage: mypwd\n"
+                         "       This command helps to verify the current directory context.\n"
+                         "       Related commands: cd (to change directories), ls (to list directory contents).\n"));
+    }
+    else if (strcmp(argv[1], "mymv") == 0)
+    {
+        write_usr("mymv: Moves a file to another directory or renames it.\n"
+                  "      Usage: mymv <source> <destination>\n"
+                  "      Example: mymv oldname.txt newname.txt\n"
+                  "      Moves the source file to the destination or renames it if the destination is a filename.\n"
+                  "      Related commands: mycp (to copy instead of move), rm (to remove a file).\n",
+                  strlen("mymv: Moves a file to another directory or renames it.\n"
+                         "      Usage: mymv <source> <destination>\n"
+                         "      Example: mymv oldname.txt newname.txt\n"
+                         "      Moves the source file to the destination or renames it if the destination is a filename.\n"
+                         "      Related commands: mycp (to copy instead of move), rm (to remove a file).\n"));
+    }
+    else if (strcmp(argv[1], "exit") == 0)
+    {
+        write_usr("exit: Terminates the shell.\n"
+                  "      Usage: exit\n"
+                  "      This command is used to close the shell session gracefully.\n"
+                  "      Related commands: logout (to log out from a session), kill (to terminate processes).\n",
+                  strlen("exit: Terminates the shell.\n"
+                         "      Usage: exit\n"
+                         "      This command is used to close the shell session gracefully.\n"
+                         "      Related commands: logout (to log out from a session), kill (to terminate processes).\n"));
+    }
+    else if (strcmp(argv[1], "type") == 0)
+    {
+        write_usr("type: Provides the type of the command (External, Internal, or Unsupported).\n"
+                  "      Usage: type <command>\n"
+                  "      This command helps in understanding whether a command is built-in or an external utility.\n"
+                  "      Supported types include:\n"
+                  "      - Internal: Commands built into the shell, like 'cd' or 'exit'.\n"
+                  "      - External: Commands that are executed by the system, like 'ls' or 'grep'.\n"
+                  "      - Unsupported: Commands that are not recognized by the shell.\n",
+                  strlen("type: Provides the type of the command (External, Internal, or Unsupported).\n"
+                         "      Usage: type <command>\n"
+                         "      This command helps in understanding whether a command is built-in or an external utility.\n"
+                         "      Supported types include:\n"
+                         "      - Internal: Commands built into the shell, like 'cd' or 'exit'.\n"
+                         "      - External: Commands that are executed by the system, like 'ls' or 'grep'.\n"
+                         "      - Unsupported: Commands that are not recognized by the shell.\n"));
+    }
+    else if (strcmp(argv[1], "cd") == 0)
+    {
+        write_usr("cd: Changes the current working directory.\n"
+                  "    Usage: cd <directory>\n"
+                  "    This command allows navigation through the file system.\n"
+                  "    Special directories include:\n"
+                  "    - .. (parent directory)\n"
+                  "    - . (current directory)\n"
+                  "    - ~ (home directory)\n",
+                  strlen("cd: Changes the current working directory.\n"
+                         "    Usage: cd <directory>\n"
+                         "    This command allows navigation through the file system.\n"
+                         "    Special directories include:\n"
+                         "    - .. (parent directory)\n"
+                         "    - . (current directory)\n"
+                         "    - ~ (home directory)\n"));
+    }
+    else
+    {
+    	help2(argc,argv);
+    }
 }
+
+void help2(int argc, char **argv)
+{
+	 if (strcmp(argv[1], "envir") == 0)
+    {
+        write_usr("envir: Prints all environment variables.\n"
+                  "       Usage: envir\n"
+                  "       This command lists all environment variables and their values.\n"
+                  "       Environment variables are key-value pairs used by the operating system and shell.\n"
+                  "       Related commands: export (to set environment variables), set (to list all variables).\n",
+                  strlen("envir: Prints all environment variables.\n"
+                         "       Usage: envir\n"
+                         "       This command lists all environment variables and their values.\n"
+                         "       Environment variables are key-value pairs used by the operating system and shell.\n"
+                         "       Related commands: export (to set environment variables), set (to list all variables).\n"));
+    }
+    else if (strcmp(argv[1], "myps") == 0)
+    {
+        write_usr("myps: Prints the last 10 processes executed in the shell.\n"
+                  "      Usage: myps\n"
+                  "      This command is useful for tracking recently executed commands and their statuses.\n"
+                  "      Each process is displayed with its PID, name, and exit status.\n"
+                  "      Related commands: ps (to list all current processes), kill (to terminate a process).\n",
+                  strlen("myps: Prints the last 10 processes executed in the shell.\n"
+                         "      Usage: myps\n"
+                         "      This command is useful for tracking recently executed commands and their statuses.\n"
+                         "      Each process is displayed with its PID, name, and exit status.\n"
+                         "      Related commands: ps (to list all current processes), kill (to terminate a process).\n"));
+    }
+    else if (strcmp(argv[1], "myfree") == 0)
+    {
+        write_usr("myfree: Prints information about RAM and SWAP usage.\n"
+                  "        Usage: myfree\n"
+                  "        This command provides details on the total, used, and free memory in the system.\n"
+                  "        SWAP information includes total and free swap space.\n"
+                  "        Related commands: free (system command for memory usage), top (for real-time memory and process monitoring).\n",
+                  strlen("myfree: Prints information about RAM and SWAP usage.\n"
+                         "        Usage: myfree\n"
+                         "        This command provides details on the total, used, and free memory in the system.\n"
+                         "        SWAP information includes total and free swap space.\n"
+                         "        Related commands: free (system command for memory usage), top (for real-time memory and process monitoring).\n"));
+    }
+    else if (strcmp(argv[1], "myuptime") == 0)
+    {
+        write_usr("myuptime: Prints the system uptime and idle time.\n"
+                  "          Usage: myuptime\n"
+                  "          The command shows how long the system has been running since the last reboot.\n"
+                  "          It also displays the time spent by the system in idle processes.\n"
+                  "          Related commands: uptime (system command for uptime), w (shows who is logged in and their activity).\n",
+                  strlen("myuptime: Prints the system uptime and idle time.\n"
+                         "          Usage: myuptime\n"
+                         "          The command shows how long the system has been running since the last reboot.\n"
+                         "          It also displays the time spent by the system in idle processes.\n"
+                         "          Related commands: uptime (system command for uptime), w (shows who is logged in and their activity).\n"));
+    }
+	
+}
+
 
 
 
@@ -665,7 +816,6 @@ void myuptime (void)
 	free(carry_1);
 	
 	char * carry_2 = malloc (100);
-	
 	write_usr ("idle time : ",strlen("idle time : "));
 	
 	time = idle ;
@@ -680,6 +830,24 @@ void myuptime (void)
 	write_usr (carry_2,strlen(carry_2));
 	
 
+}
+
+
+
+void print_all_var (void)
+{
+	envir();
+	write_usr("\n",strlen("\n"));
+	write_usr("-------------------------LOCALVAR-----------------------------\n",strlen("-------------------------LOCALVAR-----------------------------\n"));
+	int i ;
+	for( i = 0 ; i < counter_local_var ; i++)
+	{
+		write_usr(local[i].name,strlen(local[i].name));
+		write_usr("=",strlen("="));
+		write_usr(local[i].value,strlen(local[i].value));
+		write_usr("\n",strlen("\n"));		
+	}
+	
 }
 
 

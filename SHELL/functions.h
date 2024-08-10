@@ -21,6 +21,16 @@
 #define INTERNAL	1
 #define UN_SUPP		-1
 #define PATH_MAX	4096 
+
+typedef struct {
+	char * value ;
+	char * name ; 
+}local_var;
+
+
+
+
+
 extern const char *shellmsg ;
 
 
@@ -39,6 +49,10 @@ int type (int argc ,char * argss);
 void redirections (int argc , char ** argv );
 void env_var ( int argc , char ** argv , int loc);
 void set_env_var(int argc,char ** argv);
+
+void set_local_var (int argc,char ** argv);
+
+void show_local_var (int argc,char ** argv,int loc);
 
 
 

@@ -47,19 +47,26 @@ int main(void) {
         	if (argv[i][0]=='$') //checking if user entered a environment variable
        		{
        			op = deref;
-       		 	env_var(argc,argv,i); //dereferencing environment variable
+       		 	show_local_var (argc,argv,i); //dereferencing environment variable
        		 	if (i == 0 )
        		 		break;
         	}
   
         	
         }
+        
+        if(strcmp(argv[0] , "extern") == 0)
+        {
+        	set_env_var( argc , argv );
+        	continue;
+        }
 
         if (op== deref )     
         	 continue;
-        if (op == envir_var )
-        {
-        	set_env_var(argc,argv);
+        if ( op == envir_var)
+        {	
+        	
+        		set_local_var(argc,argv);
         	continue ;
         } 
         

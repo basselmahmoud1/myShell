@@ -23,11 +23,16 @@
 extern operant op ;
 
 extern char ** environ;
+extern int counter_local_var ;
+extern local_var local [30];
+
 //extern process history[10] ;
 
 void perform_builtin(int argc,char** argv,operant op , int loc);
 
 void help (int argc,char **argv);
+
+void help2(int argc, char **argv);
 
 void echo (int argc , char **argv);
 
@@ -50,5 +55,8 @@ void ps (const process *history );
 void myfree (int argc , char ** argv);
 
 void myuptime (void);
+
+void print_all_var (void);
+
 
 #endif

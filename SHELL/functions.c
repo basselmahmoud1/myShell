@@ -7,6 +7,9 @@ int argc ; // no of arguments entered by user
 char ** argv ; // array carring arguments passed by user
 char  command[COMM_SIZE]; // buffer to store command
 
+local_var local [30];
+int counter_local_var ;
+
 const char *shellmsg ="\033[1;36mEngez Mafesh W2t Lel Tafser $> \033[m"; // colored promote massage
 
 
@@ -91,7 +94,7 @@ int type (int argc ,char * argss)
 {
 	if (argc < 1)    // error checking
 		return 3 ;
-	char * supp_comm [] = {"cd","mycp","echo","exit","help","mymv","mypwd","type","envir","myps","myfree","myuptime",NULL} ; // array carring supported commands 
+	char * supp_comm [] = {"cd","mycp","echo","exit","help","mymv","mypwd","type","envir","myps","myfree","myuptime","allvar",NULL} ; // array carring supported commands 
 	int counter ;
 	for(counter = 0 ; supp_comm[counter] != NULL ; counter++ )  //iterating over supported commands 
 	{
@@ -211,15 +214,69 @@ void env_var ( int argc , char ** argv,int loc )
 
 
 
+void set_local_var (int argc,char ** argv)
+{
+	local[counter_local_var].name = strdup(argv[0]);
+	local[counter_local_var].value = strdup(argv[2]);
+	counter_local_var ++ ;	
+}
+
+void show_local_var (int argc,char ** argv,int loc)
+{
+	int len = strlen(argv[loc]);
+	int i ;
+	char *arr ;
+	arr = strdup(argv[loc]);
+	
+	for(i=0 ; i < len ; i++)
+	{
+		if(arr[0] !=  '\0')
+		arr[i] = arr[i+1];
+	}
+	arr[i-1] ='\0'; 
+	for ( i = 0 ; i < counter_local_var ; i++ )
+	{
+		if (strcmp(arr,local[i].name) == 0 )
+		{
+			write_usr(local[i].value,strlen(local[i].value));
+			write_usr("\n",strlen("\n"));
+			return; 
+		}
+		
+	}
+		
+	env_var(argc,argv,loc);	
+}
+
+
+
 void set_env_var(int argc,char ** argv)
 {
-	int error = setenv(argv[0],argv[2],1);
+	int i ,flag = 0;
+	for ( i = 0 ; i < counter_local_var ; i++ )
+	{
+		if ( strcmp(argv[1] , local[i].name ) == 0 )
+		{
+			flag = 1 ;
+			break;
+		}
+	}
+		
+	if(flag==0)
+	{
+		write_usr("there is no variable with that name \n",strlen("there is no variable with that name \n"));
+		return ;
+	}
+	int error = setenv(local[i].name,local[i].value,1);
 	if (error == -1)
 	{
 		perror("setenv :");
 		error_checker=1;
 		return;
 	}
+	local[i].name=NULL;
+	local[i].value=NULL;
+	counter_local_var--;
 	
 }
 
